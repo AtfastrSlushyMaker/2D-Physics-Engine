@@ -10,6 +10,7 @@ let ballCount = 0;
 let balls = [];
 
 let ballcounter = document.getElementById("ball-count");
+let btClear = document.getElementById("clear");
 
 
 
@@ -32,6 +33,13 @@ canvas.canvas.addEventListener("click", function (event) {
         ballcounter.value = balls.length; // Debug line
     }
 
+
+});
+
+btClear.addEventListener("click", function () {
+    balls = [];
+    ballcounter.value = 0;
+    document.getElementById('overlay').style.display = 'block';
 });
 
 function loop() {
