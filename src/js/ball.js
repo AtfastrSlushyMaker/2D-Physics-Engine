@@ -143,11 +143,6 @@ class Ball {
         this.angularVelocity = v1tPrime / this.radius;
         other.angularVelocity = v2tPrime / other.radius;
         let maxVelocity = 10; // Change this value to limit the maximum velocity
-
-        console.log(`Ball 1 velocity: ${this.velocity.x}, ${this.velocity.y}`);
-        console.log(`Ball 1 position: ${this.position.x}, ${this.position.y}`);
-        console.log(`Ball 2 velocity: ${other.velocity.x}, ${other.velocity.y}`);
-        console.log(`Ball 2 position: ${other.position.x}, ${other.position.y}`);
         this.clampVelocity(maxVelocity);
         other.clampVelocity(maxVelocity);
     }
