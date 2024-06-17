@@ -1,8 +1,8 @@
 let canvas = new Canvas("canvas"); // Assuming the class name is Canvas
 
-const gravity = parseFloat(document.getElementById("gravity").value);
-const friction = parseFloat(document.getElementById("friction").value);
-const damping = parseFloat(document.getElementById("damping").value);
+let gravity = parseFloat(document.getElementById("gravity").value);
+let friction = parseFloat(document.getElementById("friction").value);
+let damping = parseFloat(document.getElementById("damping").value);
 
 
 let collisionFriction = 0.9;
@@ -30,6 +30,11 @@ canvas.canvas.addEventListener("click", function (event) {
 });
 
 function loop() {
+    // Update the values from the HTML inputs
+    gravity = parseFloat(document.getElementById("gravity").value);
+    friction = parseFloat(document.getElementById("friction").value);
+    damping = parseFloat(document.getElementById("damping").value);
+
     canvas.clear();
     for (let i = 0; i < balls.length; i++) {
         let ball = balls[i];

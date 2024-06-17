@@ -7,46 +7,60 @@
 body {
     background-color: var(--background-color);
     color: var(--text-color);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
     height: 100vh;
     margin: 0;
     font-family: Arial, sans-serif;
     box-sizing: border-box;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto 1fr auto;
+    grid-template-areas:
+        "title title"
+        "main controls"
+        "footer footer";
+
+    gap: 1.25rem;
+}
+
+
+.controls-container {
+    grid-area: controls;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+    padding: 1.25rem;
+    gap: 1.25rem;
+}
+
+.controls {
+    /* Other styles */
+    margin-top: 100px;
+    margin-right: 200px;
+    /* Adjust as needed */
 }
 
 
 header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    grid-area: title;
+    justify-self: center;
+    margin-top: 1.25rem;
     margin-bottom: 1.25rem;
 }
 
 main {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    max-width: 37.5rem;
-}
-
-section {
-    padding: 1.25rem;
-    margin: 1.25rem;
-    border-radius: 0.625rem;
+    grid-area: main;
+    justify-self: center;
 }
 
 footer {
-    margin-top: auto;
+    grid-area: footer;
+    justify-self: center;
 }
 
 canvas {
     border: 0.3125rem solid var(--border-color);
     border-radius: 0.625rem;
+    justify-self: center;
 }
 
 .dark-mode {
@@ -104,4 +118,15 @@ canvas {
         typing 1.5s steps(40, end),
         blink-caret .75s step-end, infinite;
     width: 100%;
+}
+
+#linkGithub {
+    color: deepskyblue;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.controls input {
+    width: 100%;
+    /* Adjust as needed */
 }

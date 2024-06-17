@@ -100,8 +100,8 @@ class Ball {
 
 
     resolveCollision(other) {
-        let restitution = 0.9; // Higher value for more elastic collision
-        let frictionCoefficient = 0.4; // Lower value for less friction$
+        let restitution = parseFloat(document.getElementById("elasticity").value); // Higher value for more elastic collision
+        let frictionCoefficient = parseFloat(document.getElementById("friction").value); // Lower value for less friction$
 
         // Calculate velocity components along the normal and tangential directions
         let dx = this.position.x - other.position.x;
