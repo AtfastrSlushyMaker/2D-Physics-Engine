@@ -9,7 +9,7 @@ let collisionFriction = 0.9;
 let ballCount = 0;
 let balls = [];
 
-let ballcounter = document.getElementById("ball-count");
+let ballcounter = document.getElementById("ball-count").value;
 
 
 
@@ -25,8 +25,11 @@ canvas.canvas.addEventListener("click", function (event) {
     let y = event.clientY - rect.top;
     let ball = new Ball(ballMass, ballSize, new Vector(x, y), new Vector(0, 0), new Vector(0, 0), "white", canvas.context);// Debug line
     balls.push(ball);
+    if (balls.length > 0) {
+        document.getElementById('overlay').style.display = 'none';
+    }
     if (ballcounter) {
-        ballcounter.value = balls.length; // Debug line
+        ballcounter = balls.length; // Debug line
     }
 
 });
