@@ -5,7 +5,7 @@ let friction = parseFloat(document.getElementById("friction").value);
 let damping = parseFloat(document.getElementById("damping").value);
 
 
-let collisionFriction = 0.9;
+let collisionFriction = friction;
 let ballCount = 0;
 let balls = [];
 

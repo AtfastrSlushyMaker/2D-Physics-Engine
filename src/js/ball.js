@@ -101,54 +101,42 @@ class Ball {
 
     resolveCollision(other) {
         let restitution = parseFloat(document.getElementById("elasticity").value); // Higher value for more elastic collision
-        let frictionCoefficient = parseFloat(document.getElementById("friction").value); // Lower value for less friction$
-
+        let frictionCoefficient = parseFloat(document.getElementById("friction").value); // Lower value for less friction
         // Calculate velocity components along the normal and tangential directions
         let dx = this.position.x - other.position.x;
         let dy = this.position.y - other.position.y;
         let distance = Math.sqrt(dx * dx + dy * dy);
         let normal = { x: dx / distance, y: dy / distance };
         let tangent = { x: -normal.y, y: normal.x };
-
         // Project the velocities onto the normal and tangential axes
         let v1n = this.velocity.x * normal.x + this.velocity.y * normal.y;
         let v1t = this.velocity.x * tangent.x + this.velocity.y * tangent.y;
         let v2n = other.velocity.x * normal.x + other.velocity.y * normal.y;
         let v2t = other.velocity.x * tangent.x + other.velocity.y * tangent.y;
-
         // Compute the new normal velocities after the collision
         let v1nPrime = (v1n * (this.mass - other.mass) + 2 * other.mass * v2n) / (this.mass + other.mass);
         let v2nPrime = (v2n * (other.mass - this.mass) + 2 * this.mass * v1n) / (this.mass + other.mass);
-
         // Calculate the friction force
-        let gravity = 9.8; // Gravity constant
+        let gravity = parseFloat(document.getElementById("gravity").value); // Gravity constant
         let frictionForce = this.mass * gravity * frictionCoefficient;
-
         // Subtract the friction force from the tangential velocities only if the balls are in contact with the ground
         if (this.position.y + this.radius >= canvas.height && other.position.y + other.radius >= canvas.height) {
             v1t -= frictionForce / this.mass;
             v2t -= frictionForce / other.mass;
         }
-
         // Apply the restitution coefficient to make the collision inelastic
         v1nPrime *= restitution;
         v2nPrime *= restitution;
-
         // Update the velocities
         this.velocity.x = v1nPrime * normal.x + v1t * tangent.x;
-        this.velocity.y = v1nPrime * normal.y + v1t * tangent.y;
         other.velocity.x = v2nPrime * normal.x + v2t * tangent.x;
-        other.velocity.y = v2nPrime * normal.y + v2t * tangent.y;
-
         // Add a small separation to ensure the balls are no longer overlapping
         let overlap = this.radius + other.radius - distance;
         let separation = overlap * 0.5;
-
         this.position.x += separation * normal.x;
-        this.position.y += separation * normal.y;
         other.position.x -= separation * normal.x;
-        other.position.y -= separation * normal.y;
     }
+
     onMouseDown(event) {
         let dx = event.clientX - this.position.x;
         let dy = event.clientY - this.position.y;
