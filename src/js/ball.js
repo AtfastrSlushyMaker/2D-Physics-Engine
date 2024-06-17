@@ -1,3 +1,5 @@
+
+
 class Ball {
     mass = 1;
     radius = 1;
@@ -11,6 +13,7 @@ class Ball {
 
     isDragging = false;
     dragStart = { x: 0, y: 0 };
+    dragPositions = [];
 
 
     constructor(mass, radius, position, velocity, acceleration, color, ctx) {
@@ -63,6 +66,7 @@ class Ball {
         this.velocity.y += gravity; // Apply gravity to velocity
         this.position.x += this.velocity.x; // Update position
         this.position.y += this.velocity.y;
+
     }
     display() {
         this.ctx.beginPath();
@@ -127,14 +131,27 @@ class Ball {
         // Apply the restitution coefficient to make the collision inelastic
         v1nPrime *= restitution;
         v2nPrime *= restitution;
+        v1t *= restitution;
+        v2t *= restitution;
         // Update the velocities
         this.velocity.x = v1nPrime * normal.x + v1t * tangent.x;
         other.velocity.x = v2nPrime * normal.x + v2t * tangent.x;
         // Add a small separation to ensure the balls are no longer overlapping
         let overlap = this.radius + other.radius - distance;
         let separation = overlap * 0.5;
-        this.position.x += separation * normal.x;
-        other.position.x -= separation * normal.x;
+        // Separate the balls along both the x and y directions
+        let separationVector = { x: separation * normal.x, y: separation * normal.y };
+        this.position.x += separationVector.x;
+        this.position.y += separationVector.y;
+        other.position.x -= separationVector.x;
+        other.position.y -= separationVector.y;
+    }
+    clampVelocity(maxVelocity) {
+        let speed = Math.sqrt(this.velocity.x * this.velocity.x + this.velocity.y * this.velocity.y);
+        if (speed > maxVelocity) {
+            this.velocity.x = (this.velocity.x / speed) * maxVelocity;
+            this.velocity.y = (this.velocity.y / speed) * maxVelocity;
+        }
     }
 
     onMouseDown(event) {
@@ -146,6 +163,7 @@ class Ball {
             this.isDragging = true;
             this.dragStart = { x: dx, y: dy };
         }
+        this.dragPositions = [{ x: event.clientX, y: event.clientY, time: Date.now() }]; // Start tracking the mouse positions
     }
 
     // Add a new method to handle mouse up event
@@ -161,10 +179,18 @@ class Ball {
     }
 
     // Add a new method to handle mouse move event
-    onMouseMove(event) {
+    onMouseUp(event) {
         if (this.isDragging) {
-            // Update the position of the ball to follow the mouse
-            this.position = { x: event.clientX - this.dragStart.x, y: event.clientY - this.dragStart.y };
+            this.isDragging = false;
+
+            // Calculate the velocity based on the last two positions
+            let lastPos = this.dragPositions[this.dragPositions.length - 1];
+            let prevPos = this.dragPositions[this.dragPositions.length - 2] || lastPos;
+            let dt = (lastPos.time - prevPos.time) / 1000; // Time difference in seconds
+            this.velocity = {
+                x: (lastPos.x - prevPos.x) / dt,
+                y: (lastPos.y - prevPos.y) / dt
+            };
         }
     }
     isPointInside(point) {

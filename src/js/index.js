@@ -18,22 +18,55 @@ canvas.canvas.addEventListener("mousemove", function (event) {
     mouse = new Vector(event.clientX, event.clientY);
 });
 
-canvas.canvas.addEventListener("click", function (event) {
+let mouseDownPosition = null;
+let ball = null;
+let mouseIsDown = false;
+
+canvas.canvas.addEventListener("mousedown", function (event) {
+    if (!ball) {
+        let rect = canvas.canvas.getBoundingClientRect();
+        let x = event.clientX - rect.left;
+        let y = event.clientY - rect.top;
+        mouseDownPosition = new Vector(x, y);
+        let ballSize = parseInt(document.getElementById("ball-size").value);
+        let ballMass = parseInt(document.getElementById("ball-mass").value);
+        let ballColor = document.getElementById("ball-color").value;
+        ball = new Ball(ballMass, ballSize, new Vector(x, y), new Vector(0, 0), new Vector(0, 0), ballColor, canvas.context);
+        balls.push(ball);
+        mouseIsDown = true;
+    }
+});
+
+canvas.canvas.addEventListener("mousemove", function (event) {
     let rect = canvas.canvas.getBoundingClientRect();
-    let ballSize = parseInt(document.getElementById("ball-size").value);
-    let ballMass = parseInt(document.getElementById("ball-mass").value);
     let x = event.clientX - rect.left;
     let y = event.clientY - rect.top;
-    let ball = new Ball(ballMass, ballSize, new Vector(x, y), new Vector(0, 0), new Vector(0, 0), "white", canvas.context);// Debug line
-    balls.push(ball);
+    mouse = new Vector(x, y);
+});
+
+canvas.canvas.addEventListener("mouseup", function (event) {
+    if (ball) {
+        let rect = canvas.canvas.getBoundingClientRect();
+        let x = event.clientX - rect.left;
+        let y = event.clientY - rect.top;
+        let mouseUpPosition = new Vector(x, y);
+        let throwVector = mouseUpPosition.subtract(mouseDownPosition);
+        let scalingFactor = 0.1;
+        throwVector = throwVector.multiply(scalingFactor);
+        ball.velocity = throwVector;
+        ball = null;
+        mouseIsDown = false;
+    }
+});
+
+canvas.canvas.addEventListener("click", function (event) {
+
     if (balls.length > 0) {
         document.getElementById('overlay').style.display = 'none';
     }
     if (ballcounter) {
-        ballcounter.value = balls.length; // Debug line
+        ballcounter.value = balls.length;
     }
-
-
 });
 
 btClear.addEventListener("click", function () {

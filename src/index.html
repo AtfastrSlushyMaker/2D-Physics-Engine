@@ -10,7 +10,7 @@
 
 <body>
     <header>
-        <h1 class="typing-animation">2D Simple Physics Engine in JS</h1>
+        <h1 class="typing-animation">2D Simple Physics Simulation in JS</h1>
     </header>
     <div class="controls-container">
         <section class="controls">
@@ -39,9 +39,14 @@
                 <input type="range" id="damping" min="0" max="1" step="0.1" value="0.5">
             </div>
             <div class="control-pair">
+                <label for="ball-color">Ball Color</label>
+                <input type="color" id="ball-color" value="white" name="ball-color">
+            </div>
+            <div class="control-pair">
                 <label for="ball-count" id="label-ball-count">Ball Count</label>
                 <input id="ball-count" name="ball-count" disabled value="0">
             </div>
+
             <div class="control-pair">
                 <button id="clear">Clear</button>
             </div>
