@@ -9,7 +9,7 @@ let collisionFriction = 0.9;
 let ballCount = 0;
 let balls = [];
 
-let ballcounter = document.getElementById("ballcounter");
+let ballcounter = document.getElementById("ball-count");
 
 
 
@@ -18,15 +18,17 @@ canvas.canvas.addEventListener("mousemove", function (event) {
 });
 
 canvas.canvas.addEventListener("click", function (event) {
-    console.log("Canvas clicked"); // Debug line
     let rect = canvas.canvas.getBoundingClientRect();
     let ballSize = parseInt(document.getElementById("ball-size").value);
     let ballMass = parseInt(document.getElementById("ball-mass").value);
     let x = event.clientX - rect.left;
     let y = event.clientY - rect.top;
-    let ball = new Ball(ballMass, ballSize, new Vector(x, y), new Vector(0, 0), new Vector(0, 0), "white", canvas.context);
-    console.log(ball); // Debug line
+    let ball = new Ball(ballMass, ballSize, new Vector(x, y), new Vector(0, 0), new Vector(0, 0), "white", canvas.context);// Debug line
     balls.push(ball);
+    if (ballcounter) {
+        ballcounter.value = balls.length; // Debug line
+    }
+
 });
 
 function loop() {
@@ -59,6 +61,7 @@ function loop() {
     }
     requestAnimationFrame(loop);
 }
+
 
 loop(); // Start the animation loop
 

@@ -130,3 +130,15 @@ canvas {
     width: 100%;
     /* Adjust as needed */
 }
+
+#ball-count,
+#label-ball-count {
+    border: none;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-size: 1.25rem;
+    padding: 0.625rem;
+    border-radius: 0.3125rem;
+    text-align: center;
+
+}
