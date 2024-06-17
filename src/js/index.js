@@ -101,6 +101,7 @@ function loop() {
             }
         }
 
+
         ball.display();
     }
     requestAnimationFrame(loop);

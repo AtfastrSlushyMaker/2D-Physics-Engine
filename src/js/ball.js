@@ -76,6 +76,7 @@ class Ball {
         this.ctx.closePath();
     }
     checkCollision(canvas) {
+        let damping = parseFloat(document.getElementById("damping").value); // Damping factor
         if (this.position.x + this.radius > canvas.width) {
             this.position.x = canvas.width - this.radius;
             this.velocity.x *= -1 * damping;
@@ -106,6 +107,8 @@ class Ball {
     resolveCollision(other) {
         let restitution = parseFloat(document.getElementById("elasticity").value); // Higher value for more elastic collision
         let frictionCoefficient = parseFloat(document.getElementById("friction").value); // Lower value for less friction
+        let gravity = parseFloat(document.getElementById("gravity").value); // Gravity constant
+        let frictionForce = this.mass * gravity * frictionCoefficient;
         // Calculate velocity components along the normal and tangential directions
         let dx = this.position.x - other.position.x;
         let dy = this.position.y - other.position.y;
@@ -117,35 +120,24 @@ class Ball {
         let v1t = this.velocity.x * tangent.x + this.velocity.y * tangent.y;
         let v2n = other.velocity.x * normal.x + other.velocity.y * normal.y;
         let v2t = other.velocity.x * tangent.x + other.velocity.y * tangent.y;
-        // Compute the new normal velocities after the collision
-        let v1nPrime = (v1n * (this.mass - other.mass) + 2 * other.mass * v2n) / (this.mass + other.mass);
-        let v2nPrime = (v2n * (other.mass - this.mass) + 2 * this.mass * v1n) / (this.mass + other.mass);
-        // Calculate the friction force
-        let gravity = parseFloat(document.getElementById("gravity").value); // Gravity constant
-        let frictionForce = this.mass * gravity * frictionCoefficient;
         // Subtract the friction force from the tangential velocities only if the balls are in contact with the ground
         if (this.position.y + this.radius >= canvas.height && other.position.y + other.radius >= canvas.height) {
             v1t -= frictionForce / this.mass;
             v2t -= frictionForce / other.mass;
         }
+        // Compute the new normal velocities after the collision
+        let v1tPrime = (v1t * (this.mass - other.mass) + 2 * other.mass * v2t) / (this.mass + other.mass);
+        let v2tPrime = (v2t * (other.mass - this.mass) + 2 * this.mass * v1t) / (this.mass + other.mass);
         // Apply the restitution coefficient to make the collision inelastic
-        v1nPrime *= restitution;
-        v2nPrime *= restitution;
-        v1t *= restitution;
-        v2t *= restitution;
-        // Update the velocities
-        this.velocity.x = v1nPrime * normal.x + v1t * tangent.x;
-        other.velocity.x = v2nPrime * normal.x + v2t * tangent.x;
-        // Add a small separation to ensure the balls are no longer overlapping
-        let overlap = this.radius + other.radius - distance;
-        let separation = overlap * 0.5;
-        // Separate the balls along both the x and y directions
-        let separationVector = { x: separation * normal.x, y: separation * normal.y };
-        this.position.x += separationVector.x;
-        this.position.y += separationVector.y;
-        other.position.x -= separationVector.x;
-        other.position.y -= separationVector.y;
+        v1tPrime *= restitution;
+        v2tPrime *= restitution;
+        // Update the velocities of the balls
+        this.velocity.x = v1tPrime * tangent.x + v1n * normal.x;
+        this.velocity.y = v1tPrime * tangent.y + v1n * normal.y;
+        other.velocity.x = v2tPrime * tangent.x + v2n * normal.x;
+        other.velocity.y = v2tPrime * tangent.y + v2n * normal.y;
     }
+
     clampVelocity(maxVelocity) {
         let speed = Math.sqrt(this.velocity.x * this.velocity.x + this.velocity.y * this.velocity.y);
         if (speed > maxVelocity) {
