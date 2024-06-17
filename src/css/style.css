@@ -1,5 +1,28 @@
-#canvas {
-    display: block;
-    margin: 0 auto;
-    border: 1px solid black;
+body {
+    background-color: #333;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+canvas {
+    border: 5px solid #444;
+    border-radius: 10px;
+
+}
+
+.dark-mode {
+    background-color: #222;
+    color: #fff;
+}
+
+.dark-mode section {
+    background-color: #333;
+}
+
+.dark-mode canvas {
+    border-color: #444;
 }
