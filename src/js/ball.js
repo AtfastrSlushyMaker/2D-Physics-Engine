@@ -186,5 +186,32 @@ class Ball {
 
         return distance < this.radius;
     }
+    checkCollision(canvas) {
+        const restitution = 0.9; // Adjust this value as needed
 
+        // Check for collision with right or left edge
+        if (this.position.x + this.radius + this.velocity.x > canvas.width) {
+            this.position.x = canvas.width - this.radius;
+            this.velocity.x *= -restitution; // Reverse and dampen the x velocity
+        } else if (this.position.x - this.radius + this.velocity.x < 0) {
+            this.position.x = this.radius;
+            this.velocity.x *= -restitution; // Reverse and dampen the x velocity
+        }
+
+        // Check for collision with bottom or top edge
+        if (this.position.y + this.radius + this.velocity.y > canvas.height) {
+            this.position.y = canvas.height - this.radius;
+            this.velocity.y *= -restitution; // Reverse and dampen the y velocity
+        } else if (this.position.y - this.radius + this.velocity.y < 0) {
+            this.position.y = this.radius;
+            this.velocity.y *= -restitution; // Reverse and dampen the y velocity
+        }
+    }
+
+
+
+    collidesWith(otherBall) {
+        let distance = this.position.distance(otherBall.position);
+        return distance < this.radius + otherBall.radius;
+    }
 }
