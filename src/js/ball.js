@@ -125,17 +125,31 @@ class Ball {
             v1t -= frictionForce / this.mass;
             v2t -= frictionForce / other.mass;
         }
+        // Compute the new tangential velocities after the collision
         // Compute the new normal velocities after the collision
-        let v1tPrime = (v1t * (this.mass - other.mass) + 2 * other.mass * v2t) / (this.mass + other.mass);
-        let v2tPrime = (v2t * (other.mass - this.mass) + 2 * this.mass * v1t) / (this.mass + other.mass);
-        // Apply the restitution coefficient to make the collision inelastic
-        v1tPrime *= restitution;
-        v2tPrime *= restitution;
+        let v1tPrime = v1t;
+        let v2tPrime = v2t;
+        let v1nPrime = (v1n * (this.mass - other.mass) + 2 * other.mass * v2n) / (this.mass + other.mass);
+        let v2nPrime = (v2n * (other.mass - this.mass) + 2 * this.mass * v1n) / (this.mass + other.mass);
+
         // Update the velocities of the balls
-        this.velocity.x = v1tPrime * tangent.x + v1n * normal.x;
-        this.velocity.y = v1tPrime * tangent.y + v1n * normal.y;
-        other.velocity.x = v2tPrime * tangent.x + v2n * normal.x;
-        other.velocity.y = v2tPrime * tangent.y + v2n * normal.y;
+        this.velocity.x = v1tPrime * tangent.x + v1nPrime * normal.x;
+        this.velocity.y = v1tPrime * tangent.y + v1nPrime * normal.y;
+        other.velocity.x = v2tPrime * tangent.x + v2nPrime * normal.x;
+        other.velocity.y = v2tPrime * tangent.y + v2nPrime * normal.y;
+
+
+        // Update the rotational velocities of the balls
+        this.angularVelocity = v1tPrime / this.radius;
+        other.angularVelocity = v2tPrime / other.radius;
+        let maxVelocity = 10; // Change this value to limit the maximum velocity
+
+        console.log(`Ball 1 velocity: ${this.velocity.x}, ${this.velocity.y}`);
+        console.log(`Ball 1 position: ${this.position.x}, ${this.position.y}`);
+        console.log(`Ball 2 velocity: ${other.velocity.x}, ${other.velocity.y}`);
+        console.log(`Ball 2 position: ${other.position.x}, ${other.position.y}`);
+        this.clampVelocity(maxVelocity);
+        other.clampVelocity(maxVelocity);
     }
 
     clampVelocity(maxVelocity) {
