@@ -1,12 +1,12 @@
-class canvas {
+class Canvas {
 
     canvas = null;
     context = null;
     width = 0;
     height = 0;
 
-    constructor() {
-        this.canvas = document.getElementById("canvas");
+    constructor(canvasName) {
+        this.canvas = document.getElementById(canvasName);
         this.context = this.canvas.getContext("2d");
         this.width = this.canvas.width;
         this.height = this.canvas.height;
