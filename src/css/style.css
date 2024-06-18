@@ -104,8 +104,8 @@ canvas {
     cursor: pointer;
 }
 
-canvas:focus {
-    outline: none;
+canvas:active {
+    cursor: grab;
 }
 
 .slider {
