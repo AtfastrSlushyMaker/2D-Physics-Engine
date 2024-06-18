@@ -95,7 +95,8 @@ class Ball {
         this.ctx.shadowOffsetY = 0;
     }
     checkCollision(canvas) {
-        let damping = parseFloat(document.getElementById("damping").value); // Damping factor
+        let damping = parseFloat(document.getElementById("damping").value);
+        console.log(damping) // Damping factor 
         if (this.position.x + this.radius > canvas.width) {
             this.position.x = canvas.width - this.radius;
             this.velocity.x *= -1 * damping;
@@ -233,24 +234,25 @@ class Ball {
         return distance < this.radius;
     }
     checkCollision(canvas) {
-        const restitution = 0.9; // Adjust this value as needed
+        const restitution = parseFloat(document.getElementById("elasticity").value); // Adjust this value as needed
+        const damping = parseFloat(document.getElementById("damping").value); // Adjust this value as needed
 
         // Check for collision with right or left edge
         if (this.position.x + this.radius + this.velocity.x > canvas.width) {
             this.position.x = canvas.width - this.radius;
-            this.velocity.x *= -restitution; // Reverse and dampen the x velocity
+            this.velocity.x *= -restitution * damping; // Reverse, dampen, and apply damping to the x velocity
         } else if (this.position.x - this.radius + this.velocity.x < 0) {
             this.position.x = this.radius;
-            this.velocity.x *= -restitution; // Reverse and dampen the x velocity
+            this.velocity.x *= -restitution * damping; // Reverse, dampen, and apply damping to the x velocity
         }
 
         // Check for collision with bottom or top edge
         if (this.position.y + this.radius + this.velocity.y > canvas.height) {
             this.position.y = canvas.height - this.radius;
-            this.velocity.y *= -restitution; // Reverse and dampen the y velocity
+            this.velocity.y *= -restitution * damping; // Reverse, dampen, and apply damping to the y velocity
         } else if (this.position.y - this.radius + this.velocity.y < 0) {
             this.position.y = this.radius;
-            this.velocity.y *= -restitution; // Reverse and dampen the y velocity
+            this.velocity.y *= -restitution * damping; // Reverse, dampen, and apply damping to the y velocity
         }
     }
 
