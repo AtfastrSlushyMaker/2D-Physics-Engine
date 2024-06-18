@@ -9,7 +9,7 @@ body {
     color: var(--text-color);
     height: 100vh;
     margin: 0;
-    font-family: Arial, sans-serif;
+    font-family: JetBrains Mono, monospace;
     box-sizing: border-box;
     display: grid;
     grid-template-columns: 1fr auto;
