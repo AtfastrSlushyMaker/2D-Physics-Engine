@@ -68,10 +68,20 @@ body {
     align-items: flex-end;
     padding: 1.25rem;
     gap: 1.25rem;
+
 }
 
 .controls {
     margin-top: 100px;
+    margin-right: 200px;
+    box-shadow: 10px 10px 10px 10px rgba(0, 0, 0, 0.3);
+    background-color: var(--background-color);
+    padding: 1rem;
+    border-radius: 0.25rem;
+}
+
+.controls {
+    margin-top: 50px;
     margin-right: 200px;
 }
 
@@ -100,7 +110,7 @@ canvas {
     border: 0.3125rem solid var(--border-color);
     border-radius: 0.625rem;
     justify-self: center;
-    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.3);
+    box-shadow: 10px 10px 10px 10px rgba(0, 0, 0, 0.3);
     cursor: pointer;
 }
 
@@ -325,6 +335,6 @@ main {
     font-size: 2rem;
     font-weight: bold;
     color: white;
-    text-shadow: 10px 5px 5px #000000;
+    text-shadow: 5px 5px 5px #000000;
     padding: 5px;
 }
