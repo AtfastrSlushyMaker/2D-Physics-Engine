@@ -78,10 +78,17 @@ body {
     background-color: var(--background-color);
     padding: 1rem;
     border-radius: 0.25rem;
+    font-weight: bold;
+    color: var(--text-color);
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
+
+
 }
 
 .controls {
-    margin-top: 50px;
+    margin-top: 30px;
     margin-right: 200px;
 }
 
@@ -255,9 +262,10 @@ canvas:active {
     border: none;
     background-color: var(--background-color);
     color: var(--text-color);
-    font-size: 1.25rem;
     border-radius: 0.3125rem;
     text-align: center;
+    width: 4rem;
+    margin: 0 auto;
 }
 
 main {
@@ -290,8 +298,8 @@ main {
 }
 
 #clear {
-    background-color: white;
-    color: #222;
+    background-color: #007bff;
+    color: white;
     border: none;
     padding: 10px 20px;
     text-align: center;
@@ -305,13 +313,20 @@ main {
     margin: 0 auto;
     margin-top: 20px;
     width: 100px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 0, 0, 0.2);
+
 }
 
 #clear:hover {
-    background-color: #f1f1f1;
+    background-color: white;
     color: black;
+    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.7), 5px 5px 10px rgba(0, 0, 0, 0.2);
+    transition: 0.2s;
 
+}
+
+#clear:active {
+    background-color: #666;
+    color: white;
 }
 
 #clear:active {
@@ -335,6 +350,6 @@ main {
     font-size: 2rem;
     font-weight: bold;
     color: white;
-    text-shadow: 5px 5px 5px #000000;
+    text-shadow: 2px 2px 2px #000000;
     padding: 5px;
 }
