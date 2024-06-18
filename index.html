@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Physics Engine</title>
+    <link rel="stylesheet" href="src/css/style.css">
+</head>
+
+<body>
+    <header>
+        <h1 class="typing-animation">2D Simple Physics Simulation in <span id="js-title">JS</span></h1>
+    </header>
+    <div class="controls-container">
+        <section class="controls">
+            <div class="control-pair">
+                <label for="gravity">Gravity</label>
+                <input type="range" id="gravity" min="0" max="1" step="0.1" value="0.5">
+            </div>
+            <div class="control-pair">
+                <label for="friction">Friction</label>
+                <input type="range" id="friction" min="0" max="1" step="0.1" value="0.9">
+            </div>
+            <div class="control-pair">
+                <label for="elasticity">Elasticity</label>
+                <input type="range" id="elasticity" min="0" max="1" step="0.1" value="0.6">
+            </div>
+            <div class="control-pair">
+                <label for="ball-size">Ball Size</label>
+                <input type="range" id="ball-size" min="5" max="50" step="1" value="10">
+            </div>
+            <div class="control-pair">
+                <label for="ball-mass">Ball Mass</label>
+                <input type="range" id="ball-mass" min="1" max="10" step="1" value="4">
+            </div>
+            <div class="control-pair">
+                <label for="damping">Damping</label>
+                <input type="range" id="damping" name="damping" min="0" max="1" step="0.1" value="0.5">
+            </div>
+            <div class="control-pair">
+                <label for="air-friction">Air Friction</label>
+                <input type="range" id="air-friction" name="air-friction" min="0" max="1" step="0.001" value="0.001">
+            </div>
+            <div class="control-pair">
+                <label for="ball-color">Ball Color</label>
+                <input type="color" id="ball-color" value="#ffffff" name="ball-color">
+            </div>
+            <div class="control-pair">
+                <label for="ball-count" id="label-ball-count">Ball Count</label>
+                <input id="ball-count" name="ball-count" disabled value="0">
+            </div>
+
+            <div class="control-pair">
+                <button id="clear">Clear</button>
+            </div>
+
+        </section>
+    </div>
+    <main>
+        <canvas id="canvas" width="800" height="600"></canvas>
+        <div id="overlay">
+            <p>CLICK TO ADD A BALL</p>
+        </div>
+    </main>
+
+    <footer>
+
+        <p>Created by <a id="linkGithub" href="https://github.com/AtfastrSlushyMaker" target="_blank">Malek Bsaissa</a>
+        </p>
+    </footer>
+</body>
+<script src="src/js/vector.js"></script>
+<script src="src/js/canvas.js"></script>
+<script src="src/js/ball.js"></script>
+<script src="src/js/index.js"></script>
+
+</html>
