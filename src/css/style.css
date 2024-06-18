@@ -169,6 +169,10 @@ main {
     font-weight: bold;
 }
 
+#overlay p {
+    margin-top: 30%;
+}
+
 #clear {
     background-color: white;
     color: #222;
