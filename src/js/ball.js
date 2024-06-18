@@ -147,21 +147,32 @@ class Ball {
 
         // Compute the new tangential velocities after the collision
         // Compute the new normal velocities after the collision
-        let v1tPrime = v1t;
-        let v2tPrime = v2t;
         let v1nPrime = (v1n * (this.mass - other.mass) + 2 * other.mass * v2n) / (this.mass + other.mass);
         let v2nPrime = (v2n * (other.mass - this.mass) + 2 * this.mass * v1n) / (this.mass + other.mass);
 
-        // Update the velocities of the balls
-        this.velocity.x = v1tPrime * tangent.x + v1nPrime * normal.x;
-        this.velocity.y = v1tPrime * tangent.y + v1nPrime * normal.y;
-        other.velocity.x = v2tPrime * tangent.x + v2nPrime * normal.x;
-        other.velocity.y = v2tPrime * tangent.y + v2nPrime * normal.y;
+        // Convert the scalar normal and tangential velocities into vectors
+        let v1nPrimeVector = { x: v1nPrime * normal.x, y: v1nPrime * normal.y };
+        let v1tPrimeVector = { x: v1t * tangent.x, y: v1t * tangent.y };
+        let v2nPrimeVector = { x: v2nPrime * normal.x, y: v2nPrime * normal.y };
+        let v2tPrimeVector = { x: v2t * tangent.x, y: v2t * tangent.y };
 
+        // Update the velocities of the balls
+        this.velocity.x = v1tPrimeVector.x + v1nPrimeVector.x;
+        this.velocity.y = v1tPrimeVector.y + v1nPrimeVector.y;
+        other.velocity.x = v2tPrimeVector.x + v2nPrimeVector.x;
+        other.velocity.y = v2tPrimeVector.y + v2nPrimeVector.y;
+
+        // Move the balls outside of each other's radius
+        let overlap = this.radius + other.radius - distance;
+        let correction = { x: overlap / 2 * normal.x, y: overlap / 2 * normal.y };
+        this.position.x += correction.x;
+        this.position.y += correction.y;
+        other.position.x -= correction.x;
+        other.position.y -= correction.y;
 
         // Update the rotational velocities of the balls
-        this.angularVelocity = v1tPrime / this.radius;
-        other.angularVelocity = v2tPrime / other.radius;
+        this.angularVelocity = v1tPrimeVector / this.radius;
+        other.angularVelocity = v2tPrimeVector / other.radius;
         let maxVelocity = 10; // Change this value to limit the maximum velocity
         this.clampVelocity(maxVelocity);
         other.clampVelocity(maxVelocity);
