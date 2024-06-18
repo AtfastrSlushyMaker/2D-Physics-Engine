@@ -8,9 +8,11 @@ This project is a simple physics simulation designed for 2D environments. It all
 You can test the project live at [this link](https://atfastrslushymaker.github.io/2D-Physics-Simulation/).
 
 ## Features ✨
-- Add marbles to the canvas
+- Add Balls to the canvas
 - Simulate gravity and friction
 - Interactive and fun!
+- Throw Balls at each other
+- Click to add Balls 
 
 ## How to Use 🛠️
 1. Test Live Demo [Here](https://atfastrslushymaker.github.io/2D-Physics-Simulation/)
