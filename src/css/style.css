@@ -69,6 +69,8 @@ body {
     padding: 1.25rem;
     gap: 1.25rem;
 
+
+
 }
 
 .controls {
@@ -82,12 +84,14 @@ body {
     gap: 10px;
     display: flex;
     flex-direction: column;
+    border: 0.3125rem solid var(--border-color);
+    border-radius: 0.625rem;
 
 
 }
 
 .controls {
-    margin-top: 1px;
+    margin-top: -8px;
     margin-right: 200px;
 }
 
