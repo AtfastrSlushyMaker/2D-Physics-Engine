@@ -66,6 +66,15 @@ class Ball {
         this.velocity.y += gravity; // Apply gravity to velocity
         this.position.x += this.velocity.x; // Update position
         this.position.y += this.velocity.y;
+        // Calculate air friction
+        let frictionCoefficient = parseFloat(document.getElementById("air-friction").value); // Adjust this value to change the amount of friction
+        let frictionForce = this.velocity.multiply(-frictionCoefficient);
+
+        // Apply forces
+        this.velocity = this.velocity.add(this.acceleration);
+        this.velocity = this.velocity.add(frictionForce);
+        this.position = this.position.add(this.velocity);
+        this.acceleration = new Vector(0, 0);
 
     }
     display() {
@@ -125,6 +134,7 @@ class Ball {
             v1t -= frictionForce / this.mass;
             v2t -= frictionForce / other.mass;
         }
+
         // Compute the new tangential velocities after the collision
         // Compute the new normal velocities after the collision
         let v1tPrime = v1t;
