@@ -313,25 +313,36 @@ main {
     margin: 0 auto;
     margin-top: 20px;
     width: 100px;
+    transition: background-color 0.2s, color 0.2s;
 
 }
 
 #clear:hover {
     background-color: white;
     color: black;
-    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.7), 5px 5px 10px rgba(0, 0, 0, 0.2);
-    transition: 0.2s;
+    transition: background-color 0.2s, color 0.2s;
 
 }
 
 #clear:active {
     background-color: #666;
     color: white;
+    transition: background-color 0.2s, color 0.2s;
 }
 
-#clear:active {
-    background-color: #666;
+#clear:not(:hover) {
+    animation: clearFadeOut 0.2s forwards;
     color: white;
+
+    @keyframes clearFadeOut {
+        from {
+            opacity: 1;
+        }
+
+        to {
+            opacity: 0;
+        }
+    }
 }
 
 #ball-color {
