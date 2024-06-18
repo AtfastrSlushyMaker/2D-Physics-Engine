@@ -114,7 +114,19 @@ footer {
     background-color: var(--background-color);
     color: var(--text-color);
     padding: 1.25rem;
+    font-size: 1.005rem;
+    text-align: center;
+    border-top: 2px solid var(--border-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.625rem;
+
+
+
+
 }
+
 
 canvas {
     border: 0.3125rem solid var(--border-color);
@@ -246,14 +258,53 @@ canvas:active {
     color: #007bff;
     text-decoration: none;
     font-weight: bold;
+    animation: rainbow 10s infinite;
 }
 
-#linkGithub:hover {
-    color: yellow;
-}
+@keyframes rainbow {
+    0% {
+        color: red;
+    }
 
-#linkGithub:active {
-    color: #4169e1;
+    10% {
+        color: orangered;
+    }
+
+    20% {
+        color: orange;
+    }
+
+    30% {
+        color: gold;
+    }
+
+    40% {
+        color: yellow;
+    }
+
+    50% {
+        color: lime;
+    }
+
+    60% {
+        color: green;
+    }
+
+    70% {
+        color: teal;
+    }
+
+    80% {
+        color: blue;
+    }
+
+    90% {
+        color: indigo;
+    }
+
+    100% {
+        color: violet;
+    }
 }
 
 .controls input {
@@ -373,6 +424,6 @@ main {
     font-size: 2rem;
     font-weight: bold;
     color: white;
-    text-shadow: 2px 2px 2px #000000;
+    text-shadow: 1px 1px 1px #000000;
     padding: 5px;
 }
