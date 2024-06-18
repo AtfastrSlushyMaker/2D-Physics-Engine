@@ -181,9 +181,22 @@ main {
     margin: 4px 2px;
     cursor: pointer;
     border-radius: 5px;
+    display: block;
+    margin: 0 auto;
+    margin-top: 20px;
+    width: 100px;
+    box-shadow: 10px 10px 10px 10px rgba(0, 0, 0, 0.3), 10px 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
 
+#clear:hover {
+    background-color: #f1f1f1;
+    color: black;
 
+}
 
+#clear:active {
+    background-color: #666;
+    color: white;
 }
 
 #ball-color {
@@ -192,4 +205,8 @@ main {
     cursor: pointer;
     border-radius: 5px;
     color: white;
+}
+
+#js-title {
+    color: yellow;
 }
