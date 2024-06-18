@@ -164,7 +164,7 @@ class Ball {
 
         // Move the balls outside of each other's radius
         let overlap = this.radius + other.radius - distance;
-        let correction = { x: overlap / 2 * normal.x, y: overlap / 2 * normal.y };
+        let correction = { x: overlap * normal.x, y: overlap * normal.y };
         this.position.x += correction.x;
         this.position.y += correction.y;
         other.position.x -= correction.x;
