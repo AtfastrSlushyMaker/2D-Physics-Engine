@@ -81,8 +81,18 @@ class Ball {
         this.ctx.beginPath();
         this.ctx.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2, false);
         this.ctx.fillStyle = this.color;
+        // Add shadow
+        this.ctx.shadowColor = 'rgba(0, 0, 0, 0.5)'; // Change the color as needed
+        this.ctx.shadowBlur = 10; // Adjust the blur as needed
+        this.ctx.shadowOffsetX = 5; // Adjust the x-offset as needed
+        this.ctx.shadowOffsetY = 5; // Adjust the y-offset as needed
         this.ctx.fill();
         this.ctx.closePath();
+        // Reset shadow properties
+        this.ctx.shadowColor = null;
+        this.ctx.shadowBlur = 0;
+        this.ctx.shadowOffsetX = 0;
+        this.ctx.shadowOffsetY = 0;
     }
     checkCollision(canvas) {
         let damping = parseFloat(document.getElementById("damping").value); // Damping factor
