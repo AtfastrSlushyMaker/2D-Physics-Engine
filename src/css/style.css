@@ -77,14 +77,40 @@ canvas {
     border-color: var(--border-color);
 }
 
-@media (max-width: 37.5rem) {
+@media (max-width: 600px) {
     body {
-        background-color: #222;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr auto auto;
+        grid-template-areas:
+            "title"
+            "main"
+            "controls"
+            "footer";
+    }
+
+    .controls-container {
+        align-items: center;
+        padding: 0.625rem;
+    }
+
+    .controls {
+        margin-top: 50px;
+        margin-right: 100px;
     }
 
     canvas {
-        width: 100%;
+        width: 90%;
         height: auto;
+    }
+
+    #overlay {
+        font-size: 30px;
+    }
+
+    #clear {
+        padding: 5px 10px;
+        font-size: 12px;
+        width: 80px;
     }
 }
 
