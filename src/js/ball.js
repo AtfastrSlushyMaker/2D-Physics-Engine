@@ -63,7 +63,8 @@ class Ball {
 
     playCollisionSound() {
         let audio = (this.collisionCounter == 0) ? new Audio("assets/sounds/hit_sound_1.mp3") : new Audio("assets/sounds/hit_sound_2.mp3");
-        if (audio) {
+        let sound = document.getElementById("sound-toggle").checked;
+        if (audio && sound) {
             audio.play();
             this.collisionCounter = (this.collisionCounter + 1) % 2;
         }
