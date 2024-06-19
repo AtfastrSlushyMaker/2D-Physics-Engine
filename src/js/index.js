@@ -4,15 +4,12 @@ let gravity = parseFloat(document.getElementById("gravity").value);
 let friction = parseFloat(document.getElementById("friction").value);
 let damping = parseFloat(document.getElementById("damping").value);
 
-
 let collisionFriction = friction;
 let ballCount = 0;
 let balls = [];
 
 let ballcounter = document.getElementById("ball-count");
 let btClear = document.getElementById("clear");
-
-
 
 canvas.canvas.addEventListener("mousemove", function (event) {
     mouse = new Vector(event.clientX, event.clientY);
@@ -60,7 +57,6 @@ canvas.canvas.addEventListener("mouseup", function (event) {
 });
 
 canvas.canvas.addEventListener("click", function (event) {
-
     if (balls.length > 0) {
         document.getElementById('overlay').style.display = 'none';
     }
@@ -76,7 +72,6 @@ btClear.addEventListener("click", function () {
 });
 
 function loop() {
-    // Update the values from the HTML inputs
     gravity = parseFloat(document.getElementById("gravity").value);
     friction = parseFloat(document.getElementById("friction").value);
     damping = parseFloat(document.getElementById("damping").value);
@@ -88,7 +83,7 @@ function loop() {
         ball.applyForce(frictionForce);
         ball.applyForce(new Vector(0, gravity));
         ball.update();
-        ball.checkCollision(canvas.canvas); // Check for collision with canvas
+        ball.checkCollision(canvas.canvas);
 
         let ballcounter = document.getElementById("ballcounter");
         if (ballcounter) {
@@ -97,16 +92,13 @@ function loop() {
 
         for (let j = i + 1; j < balls.length; j++) {
             if (ball.collidesWith(balls[j])) {
-                ball.resolveCollision(balls[j]);
+                ball.resolveCollision(balls[j], canvas.canvas); // Pass the canvas object
             }
         }
-
 
         ball.display();
     }
     requestAnimationFrame(loop);
 }
 
-
 loop(); // Start the animation loop
-

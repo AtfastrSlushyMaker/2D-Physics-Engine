@@ -1,5 +1,3 @@
-
-
 class Ball {
     mass = 1;
     radius = 1;
@@ -14,7 +12,8 @@ class Ball {
     isDragging = false;
     dragStart = { x: 0, y: 0 };
     dragPositions = [];
-
+    collisionCounter = 0;
+    isColliding = false;
 
     constructor(mass, radius, position, velocity, acceleration, color, ctx) {
         this.mass = mass;
@@ -62,121 +61,117 @@ class Ball {
         this.force = this.force.add(force);
     }
 
+    playCollisionSound() {
+        let audio = (this.collisionCounter == 0) ? new Audio("assets/sounds/hit_sound_1.mp3") : new Audio("assets/sounds/hit_sound_2.mp3");
+        if (audio) {
+            audio.play();
+            this.collisionCounter = (this.collisionCounter + 1) % 2;
+        }
+    }
+
     update() {
+        const gravity = parseFloat(document.getElementById("gravity").value);
         this.velocity.y += gravity; // Apply gravity to velocity
-        this.position.x += this.velocity.x; // Update position
-        this.position.y += this.velocity.y;
+
+        this.position = this.position.add(this.velocity); // Update position
+
         // Calculate air friction
-        let frictionCoefficient = parseFloat(document.getElementById("air-friction").value); // Adjust this value to change the amount of friction
-        let frictionForce = this.velocity.multiply(-frictionCoefficient);
+        const frictionCoefficient = parseFloat(document.getElementById("air-friction").value);
+        const frictionForce = this.velocity.multiply(-frictionCoefficient);
 
         // Apply forces
         this.velocity = this.velocity.add(this.acceleration);
         this.velocity = this.velocity.add(frictionForce);
         this.position = this.position.add(this.velocity);
         this.acceleration = new Vector(0, 0);
-
     }
+
     display() {
         this.ctx.beginPath();
         this.ctx.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2, false);
         this.ctx.fillStyle = this.color;
+
         // Add shadow
-        this.ctx.shadowColor = 'rgba(0, 0, 0, 0.5)'; // Change the color as needed
-        this.ctx.shadowBlur = 10; // Adjust the blur as needed
-        this.ctx.shadowOffsetX = 5; // Adjust the x-offset as needed
-        this.ctx.shadowOffsetY = 5; // Adjust the y-offset as needed
+        this.ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+        this.ctx.shadowBlur = 10;
+        this.ctx.shadowOffsetX = 5;
+        this.ctx.shadowOffsetY = 5;
         this.ctx.fill();
         this.ctx.closePath();
+
         // Reset shadow properties
         this.ctx.shadowColor = null;
         this.ctx.shadowBlur = 0;
         this.ctx.shadowOffsetX = 0;
         this.ctx.shadowOffsetY = 0;
     }
-    checkCollision(canvas) {
-        let damping = parseFloat(document.getElementById("damping").value);
-        console.log(damping) // Damping factor 
-        if (this.position.x + this.radius > canvas.width) {
-            this.position.x = canvas.width - this.radius;
-            this.velocity.x *= -1 * damping;
-        } else if (this.position.x - this.radius < 0) {
-            this.position.x = this.radius;
-            this.velocity.x *= -1 * damping;
-        }
-
-        if (this.position.y + this.radius > canvas.height) {
-            this.position.y = canvas.height - this.radius;
-            this.velocity.y *= -1 * damping;
-        } else if (this.position.y - this.radius < 0) {
-            this.position.y = this.radius;
-            this.velocity.y *= -1 * damping;
-        }
-    }
 
     collidesWith(other) {
-        let dx = this.position.x - other.position.x;
-        let dy = this.position.y - other.position.y;
-        let distance = Math.sqrt(dx * dx + dy * dy);
+        const dx = this.position.x - other.position.x;
+        const dy = this.position.y - other.position.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
 
+        if (distance < this.radius + other.radius) {
+            this.playCollisionSound();
+        }
         return distance < this.radius + other.radius;
     }
 
+    resolveCollision(other, canvas) {
+        const restitution = parseFloat(document.getElementById("elasticity").value);
+        const frictionCoefficient = parseFloat(document.getElementById("friction").value);
+        const gravity = parseFloat(document.getElementById("gravity").value);
+        const frictionForce = this.mass * gravity * frictionCoefficient;
 
+        const dx = this.position.x - other.position.x;
+        const dy = this.position.y - other.position.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
 
-    resolveCollision(other) {
-        let restitution = parseFloat(document.getElementById("elasticity").value); // Higher value for more elastic collision
-        let frictionCoefficient = parseFloat(document.getElementById("friction").value); // Lower value for less friction
-        let gravity = parseFloat(document.getElementById("gravity").value); // Gravity constant
-        let frictionForce = this.mass * gravity * frictionCoefficient;
-        // Calculate velocity components along the normal and tangential directions
-        let dx = this.position.x - other.position.x;
-        let dy = this.position.y - other.position.y;
-        let distance = Math.sqrt(dx * dx + dy * dy);
-        let normal = { x: dx / distance, y: dy / distance };
-        let tangent = { x: -normal.y, y: normal.x };
-        // Project the velocities onto the normal and tangential axes
-        let v1n = this.velocity.x * normal.x + this.velocity.y * normal.y;
+        if (distance === 0) return;
+
+        const normal = { x: dx / distance, y: dy / distance };
+        const tangent = { x: -normal.y, y: normal.x };
+
+        const v1n = this.velocity.x * normal.x + this.velocity.y * normal.y;
         let v1t = this.velocity.x * tangent.x + this.velocity.y * tangent.y;
-        let v2n = other.velocity.x * normal.x + other.velocity.y * normal.y;
+        const v2n = other.velocity.x * normal.x + other.velocity.y * normal.y;
         let v2t = other.velocity.x * tangent.x + other.velocity.y * tangent.y;
-        // Subtract the friction force from the tangential velocities only if the balls are in contact with the ground
+
         if (this.position.y + this.radius >= canvas.height && other.position.y + other.radius >= canvas.height) {
-            v1t -= frictionForce / this.mass;
-            v2t -= frictionForce / other.mass;
+            const friction1 = Math.min(frictionForce / this.mass, Math.abs(v1t)) * Math.sign(v1t);
+            const friction2 = Math.min(frictionForce / other.mass, Math.abs(v2t)) * Math.sign(v2t);
+            v1t -= friction1;
+            v2t -= friction2;
         }
 
-        // Compute the new tangential velocities after the collision
-        // Compute the new normal velocities after the collision
-        let v1nPrime = (v1n * (this.mass - other.mass) + 2 * other.mass * v2n) / (this.mass + other.mass);
-        let v2nPrime = (v2n * (other.mass - this.mass) + 2 * this.mass * v1n) / (this.mass + other.mass);
+        const v1nPrime = (v1n * (this.mass - other.mass) + 2 * other.mass * v2n) / (this.mass + other.mass);
+        const v2nPrime = (v2n * (other.mass - this.mass) + 2 * this.mass * v1n) / (this.mass + other.mass);
 
-        // Convert the scalar normal and tangential velocities into vectors
-        let v1nPrimeVector = { x: v1nPrime * normal.x, y: v1nPrime * normal.y };
-        let v1tPrimeVector = { x: v1t * tangent.x, y: v1t * tangent.y };
-        let v2nPrimeVector = { x: v2nPrime * normal.x, y: v2nPrime * normal.y };
-        let v2tPrimeVector = { x: v2t * tangent.x, y: v2t * tangent.y };
+        const v1nPrimeVector = { x: v1nPrime * normal.x, y: v1nPrime * normal.y };
+        const v1tPrimeVector = { x: v1t * tangent.x, y: v1t * tangent.y };
+        const v2nPrimeVector = { x: v2nPrime * normal.x, y: v2nPrime * normal.y };
+        const v2tPrimeVector = { x: v2t * tangent.x, y: v2t * tangent.y };
 
-        // Update the velocities of the balls
         this.velocity.x = v1tPrimeVector.x + v1nPrimeVector.x;
         this.velocity.y = v1tPrimeVector.y + v1nPrimeVector.y;
         other.velocity.x = v2tPrimeVector.x + v2nPrimeVector.x;
         other.velocity.y = v2tPrimeVector.y + v2nPrimeVector.y;
 
-        // Move the balls outside of each other's radius
-        let overlap = this.radius + other.radius - distance;
-        let correction = { x: overlap * normal.x, y: overlap * normal.y };
+        const overlap = this.radius + other.radius - distance;
+        const correction = { x: overlap * normal.x / 2, y: overlap * normal.y / 2 };
         this.position.x += correction.x;
         this.position.y += correction.y;
         other.position.x -= correction.x;
         other.position.y -= correction.y;
 
-        // Update the rotational velocities of the balls
-        this.angularVelocity = v1tPrimeVector / this.radius;
-        other.angularVelocity = v2tPrimeVector / other.radius;
-        let maxVelocity = 10; // Change this value to limit the maximum velocity
+        this.angularVelocity = v1t / this.radius;
+        other.angularVelocity = v2t / other.radius;
+
+        const maxVelocity = 10;
         this.clampVelocity(maxVelocity);
         other.clampVelocity(maxVelocity);
+
+        this.playCollisionSound();
     }
 
     clampVelocity(maxVelocity) {
@@ -199,19 +194,6 @@ class Ball {
         this.dragPositions = [{ x: event.clientX, y: event.clientY, time: Date.now() }]; // Start tracking the mouse positions
     }
 
-    // Add a new method to handle mouse up event
-    onMouseUp(event) {
-        if (this.isDragging) {
-            this.isDragging = false;
-
-            // Calculate the velocity based on the distance dragged
-            let dx = event.clientX - this.position.x;
-            let dy = event.clientY - this.position.y;
-            this.velocity = { x: (dx - this.dragStart.x) * 0.5, y: (dy - this.dragStart.y) * 0.5 };
-        }
-    }
-
-    // Add a new method to handle mouse move event
     onMouseUp(event) {
         if (this.isDragging) {
             this.isDragging = false;
@@ -226,6 +208,13 @@ class Ball {
             };
         }
     }
+
+    onMouseMove(event) {
+        if (this.isDragging) {
+            this.dragPositions.push({ x: event.clientX, y: event.clientY, time: Date.now() });
+        }
+    }
+
     isPointInside(point) {
         let dx = point.x - this.position.x;
         let dy = point.y - this.position.y;
@@ -233,33 +222,57 @@ class Ball {
 
         return distance < this.radius;
     }
-    checkCollision(canvas) {
-        const restitution = parseFloat(document.getElementById("elasticity").value); // Adjust this value as needed
-        const damping = parseFloat(document.getElementById("damping").value); // Adjust this value as needed
 
-        // Check for collision with right or left edge
+    checkCollision(canvas) {
+        const restitution = parseFloat(document.getElementById("elasticity").value);
+        const damping = parseFloat(document.getElementById("damping").value);
+
+        // Flags to track collisions
+        let collidedWithFloor = false;
+        let collidedWithCeiling = false;
+        let collidedWithLeftWall = false;
+        let collidedWithRightWall = false;
+
+        // Check for collision with right edge
         if (this.position.x + this.radius + this.velocity.x > canvas.width) {
             this.position.x = canvas.width - this.radius;
-            this.velocity.x *= -restitution * damping; // Reverse, dampen, and apply damping to the x velocity
-        } else if (this.position.x - this.radius + this.velocity.x < 0) {
-            this.position.x = this.radius;
-            this.velocity.x *= -restitution * damping; // Reverse, dampen, and apply damping to the x velocity
+            this.velocity.x *= -restitution * damping;
+            collidedWithRightWall = true;
         }
 
-        // Check for collision with bottom or top edge
+        // Check for collision with left edge
+        if (this.position.x - this.radius + this.velocity.x < 0) {
+            this.position.x = this.radius;
+            this.velocity.x *= -restitution * damping;
+            collidedWithLeftWall = true;
+        }
+
+        // Check for collision with bottom edge
         if (this.position.y + this.radius + this.velocity.y > canvas.height) {
             this.position.y = canvas.height - this.radius;
-            this.velocity.y *= -restitution * damping; // Reverse, dampen, and apply damping to the y velocity
-        } else if (this.position.y - this.radius + this.velocity.y < 0) {
-            this.position.y = this.radius;
-            this.velocity.y *= -restitution * damping; // Reverse, dampen, and apply damping to the y velocity
+            this.velocity.y *= -restitution * damping;
+            collidedWithFloor = true;
         }
-    }
 
+        // Check for collision with top edge
+        if (this.position.y - this.radius + this.velocity.y < 0) {
+            this.position.y = this.radius;
+            this.velocity.y *= -restitution * damping;
+            collidedWithCeiling = true;
+        }
 
+        // Play collision sound if a collision occurred and it wasn't already colliding
+        if ((collidedWithFloor && !this.isCollidingFloor) ||
+            (collidedWithCeiling && !this.isCollidingCeiling) ||
+            (collidedWithLeftWall && !this.isCollidingLeftWall) ||
+            (collidedWithRightWall && !this.isCollidingRightWall)) {
+            this.playCollisionSound();
+        }
 
-    collidesWith(otherBall) {
-        let distance = this.position.distance(otherBall.position);
-        return distance < this.radius + otherBall.radius;
+        // Update collision flags
+        this.isCollidingFloor = collidedWithFloor;
+        this.isCollidingCeiling = collidedWithCeiling;
+        this.isCollidingLeftWall = collidedWithLeftWall;
+        this.isCollidingRightWall = collidedWithRightWall;
     }
 }
