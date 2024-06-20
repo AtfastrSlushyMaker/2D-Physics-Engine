@@ -7,7 +7,6 @@
 body {
     background-color: var(--background-color);
     color: var(--text-color);
-    height: 100vh;
     margin: 0;
     font-family: JetBrains Mono, monospace;
     box-sizing: border-box;
@@ -18,8 +17,6 @@ body {
         "title title"
         "main controls"
         "footer footer";
-
-
     gap: 1.25rem;
     cursor: default;
 }
@@ -34,31 +31,17 @@ body {
     transition: opacity .2s;
 }
 
-.color-picker::-webkit-color-swatch-wrapper {
+.color-picker::-webkit-color-swatch-wrapper,
+.color-picker::-moz-color-swatch-wrapper,
+.color-picker::-ms-color-swatch-wrapper {
     padding: 0;
 }
 
-.color-picker::-webkit-color-swatch {
-    border: none;
-    border-radius: 0.25rem;
-}
-
-.color-picker::-moz-color-swatch {
-    border: none;
-    border-radius: 0.25rem;
-}
-
-.color-picker::-moz-color-swatch-wrapper {
-    padding: 0;
-}
-
+.color-picker::-webkit-color-swatch,
+.color-picker::-moz-color-swatch,
 .color-picker::-ms-color-swatch {
     border: none;
     border-radius: 0.25rem;
-}
-
-.color-picker::-ms-color-swatch-wrapper {
-    padding: 0;
 }
 
 .controls-container {
@@ -68,11 +51,9 @@ body {
     align-items: flex-end;
     padding: 1.25rem;
     gap: 1.25rem;
-
 }
 
 .controls {
-
     box-shadow: 10px 10px 10px 10px rgba(0, 0, 0, 0.3);
     background-color: var(--background-color);
     padding: 1rem;
@@ -82,11 +63,10 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
-
     border: 0.3125rem solid var(--border-color);
     border-radius: 0.625rem;
-
-
+    margin-top: -40px;
+    margin-right: 250px;
 }
 
 .control-row {
@@ -102,14 +82,8 @@ body {
 
 .control-row input[type="checkbox"] {
     width: 20%;
+    cursor: pointer;
 }
-
-
-.controls {
-    margin-top: -50px;
-    margin-right: 250px;
-}
-
 
 header {
     grid-area: title;
@@ -121,6 +95,7 @@ header {
 main {
     grid-area: main;
     justify-self: center;
+    position: relative;
 }
 
 footer {
@@ -136,12 +111,7 @@ footer {
     justify-content: center;
     align-items: center;
     gap: 0.625rem;
-
-
-
-
 }
-
 
 canvas {
     border: 0.3125rem solid var(--border-color);
@@ -168,17 +138,10 @@ canvas:active {
     transition: opacity .2s;
 }
 
-.slider::-webkit-slider-thumb {
+.slider::-webkit-slider-thumb,
+.slider::-moz-range-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 1rem;
-    height: 1rem;
-    border-radius: 50%;
-    background: var(--text-color);
-    cursor: pointer;
-}
-
-.slider::-moz-range-thumb {
     width: 1rem;
     height: 1rem;
     border-radius: 50%;
@@ -329,7 +292,6 @@ canvas:active {
 #ball-count,
 #label-ball-count {
     display: flex;
-
     justify-content: center;
     align-items: center;
     border: none;
@@ -346,10 +308,6 @@ canvas:active {
     padding: 0.5rem;
 }
 
-main {
-    position: relative;
-}
-
 #canvas {
     z-index: 1;
 }
@@ -359,12 +317,13 @@ main {
     top: 0;
     left: 0;
     width: 100%;
-    height: 88%;
+    height: 93%;
     background: rgba(0, 0, 0, 0.1);
     border: none;
     display: block;
     z-index: 2;
     pointer-events: none;
+    border-radius: 0.3125rem;
     font-size: 50px;
     text-align: center;
     color: white;
@@ -382,45 +341,23 @@ main {
     padding: 10px 20px;
     text-align: center;
     text-decoration: none;
-    display: inline-block;
+    display: block;
     font-size: 16px;
-    margin: 4px 2px;
+    margin: 20px auto;
     cursor: pointer;
     border-radius: 5px;
-    display: block;
-    margin: 0 auto;
-    margin-top: 20px;
     width: 100px;
     transition: background-color 0.2s, color 0.2s;
-
 }
 
 #clear:hover {
     background-color: white;
     color: black;
-    transition: background-color 0.2s, color 0.2s;
-
 }
 
 #clear:active {
     background-color: #666;
     color: white;
-    transition: background-color 0.2s, color 0.2s;
-}
-
-#clear:not(:hover) {
-    animation: clearFadeOut 0.2s forwards;
-    color: white;
-
-    @keyframes clearFadeOut {
-        from {
-            opacity: 1;
-        }
-
-        to {
-            opacity: 0;
-        }
-    }
 }
 
 #ball-color {
@@ -439,6 +376,6 @@ main {
     font-size: 2rem;
     font-weight: bold;
     color: white;
-    text-shadow: 1px 1px 1px #000000;
+    text-shadow: 1px 1px 1px #000;
     padding: 5px;
 }
