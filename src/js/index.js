@@ -96,7 +96,7 @@ function loop() {
             }
         }
 
-        ball.display();
+        ball.display(); // Call the display method to draw the ball and its trail
     }
     requestAnimationFrame(loop);
 }

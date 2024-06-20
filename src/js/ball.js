@@ -7,13 +7,19 @@ class Ball {
     force = new Vector(0, 0);
     color = "black";
     ctx = null;
-    collisions = [];
+
 
     isDragging = false;
     dragStart = { x: 0, y: 0 };
     dragPositions = [];
+
+
+    collisions = [];
     collisionCounter = 0;
     isColliding = false;
+
+    trail = [];
+    maxTrailLength = 15;
 
     constructor(mass, radius, position, velocity, acceleration, color, ctx) {
         this.mass = mass;
@@ -23,6 +29,8 @@ class Ball {
         this.acceleration = acceleration;
         this.color = color;
         this.ctx = ctx;
+        this.trail = [];
+        this.collisionCounter = 0;
     }
 
     setMass(mass) {
@@ -74,6 +82,11 @@ class Ball {
         const gravity = parseFloat(document.getElementById("gravity").value);
         this.velocity.y += gravity; // Apply gravity to velocity
 
+        this.trail.push({ x: this.position.x, y: this.position.y });
+        // Limit the length of the trail
+        if (this.trail.length > this.maxTrailLength) {
+            this.trail.shift();
+        }
         this.position = this.position.add(this.velocity); // Update position
 
         // Calculate air friction
@@ -88,11 +101,16 @@ class Ball {
     }
 
     display() {
+        // Draw the trail first
+        let trailToggle = document.getElementById("trail-toggle").checked;
+        if (trailToggle) { this.drawTrail(); }
+
+        // display logic to draw the ball
         this.ctx.beginPath();
         this.ctx.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2, false);
         this.ctx.fillStyle = this.color;
 
-        // Add shadow
+        // Add shadow if needed
         this.ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
         this.ctx.shadowBlur = 10;
         this.ctx.shadowOffsetX = 5;
@@ -105,6 +123,32 @@ class Ball {
         this.ctx.shadowBlur = 0;
         this.ctx.shadowOffsetX = 0;
         this.ctx.shadowOffsetY = 0;
+    }
+
+    hexToRgba(hex, alpha) {
+        let c;
+        if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
+            c = hex.substring(1).split('');
+            if (c.length == 3) {
+                c = [c[0], c[0], c[1], c[1], c[2], c[2]];
+            }
+            c = '0x' + c.join('');
+            return 'rgba(' + [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(',') + ',' + alpha + ')';
+        }
+        throw new Error('Bad Hex');
+    }
+
+
+    drawTrail() {
+        for (let i = 0; i < this.trail.length; i++) {
+            let pos = this.trail[i];
+            let alpha = (i + 1) / this.trail.length; // Calculate the alpha value
+            this.ctx.beginPath();
+            this.ctx.arc(pos.x, pos.y, this.radius, 0, Math.PI * 2, false);
+            this.ctx.fillStyle = this.hexToRgba(this.color, alpha); // Use the rgba color with alpha
+            this.ctx.fill();
+            this.ctx.closePath();
+        }
     }
 
     collidesWith(other) {
